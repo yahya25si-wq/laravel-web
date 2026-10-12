@@ -42,7 +42,7 @@ class QuestionController extends Controller
     'email.email' => 'Email Tidak valid',
     ]);
 
-    return view('home-question-respon', $data);
+    return redirect()->route('home-question-respon')->with('info','Data sudah berhasil diinputkan',$data);
     }
 
 
