@@ -67,9 +67,20 @@ class PelangganController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $pelanggan_id = $id;
-        $pelanggan    = Pelanggan::findOrFail($pelanggan_id);
+        // Validasi data pelanggan
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name'  => 'required|string|max:255',
+            'birthday'   => 'nullable|date',
+            'gender'     => 'required|in:Male,Female,Other',
+            'email'      => 'required|email',
+            'phone'      => 'nullable|string',
+        ]);
 
+        // Cari data pelanggan
+        $pelanggan = Pelanggan::findOrFail($id);
+
+        // Update data pelanggan
         $pelanggan->first_name = $request->first_name;
         $pelanggan->last_name  = $request->last_name;
         $pelanggan->birthday   = $request->birthday;
@@ -77,11 +88,14 @@ class PelangganController extends Controller
         $pelanggan->email      = $request->email;
         $pelanggan->phone      = $request->phone;
 
+        // Simpan perubahan
         $pelanggan->save();
 
-        return redirect()->route('pelanggan.index')->with('success', 'Perubahan Data Berhasil!');
+        // Kembali ke halaman pelanggan
+        return redirect()
+            ->route('pelanggan.index')
+            ->with('success', 'Perubahan Data Berhasil!');
     }
-
     /**
      * Remove the specified resource from storage.
      */
